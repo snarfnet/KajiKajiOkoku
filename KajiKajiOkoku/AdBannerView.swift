@@ -9,7 +9,7 @@ struct AdBannerView: UIViewRepresentable {
         banner.adUnitID = adUnitID
         banner.rootViewController = UIApplication.shared.connectedScenes
             .compactMap { $0 as? UIWindowScene }
-            .first?.windows.first?.rootViewController
+            .first?.keyWindow?.rootViewController
         banner.load(GADRequest())
         return banner
     }
