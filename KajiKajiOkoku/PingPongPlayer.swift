@@ -9,6 +9,7 @@ class PingPongPlayer: ObservableObject {
     init() {
         player = AVQueuePlayer()
         player.isMuted = true
+        player.automaticallyWaitsToMinimizeStalling = false
         enqueue(forward: true)
         enqueue(forward: false)
         setupObservers()
@@ -28,9 +29,11 @@ class PingPongPlayer: ObservableObject {
     private func setupObservers() {
         // アイテムが切り替わったら速度を調整（正再生: 4x、逆再生: 1x）
         itemObserver = player.observe(\.currentItem, options: [.new]) { [weak self] p, _ in
-            guard let self, let item = p.currentItem else { return }
-            let rate: Float = 4.0
-            DispatchQueue.main.async { p.rate = rate }
+            guard let self, let _ = p.currentItem else { return }
+            DispatchQueue.main.async {
+                guard p.status == .readyToPlay else { return }
+                p.rate = 4.0
+            }
         }
 
         // 再生終了時に次のアイテムを追加してキューを維持
@@ -46,7 +49,13 @@ class PingPongPlayer: ObservableObject {
     }
 
     func play() {
-        player.rate = 4.0
+        if player.status == .readyToPlay {
+            player.rate = 4.0
+        } else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+                self?.player.rate = 4.0
+            }
+        }
     }
 
     deinit {
