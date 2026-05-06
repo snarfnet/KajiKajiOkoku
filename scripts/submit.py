@@ -64,12 +64,12 @@ if version_state in ('WAITING_FOR_REVIEW', 'IN_REVIEW'):
     print(f'Already in review ({version_state}). Nothing to do.')
     sys.exit(0)
 
-if not version_id or version_state in ('READY_FOR_DISTRIBUTION',):
+if not version_id or version_state in ('READY_FOR_DISTRIBUTION', 'READY_FOR_SALE'):
     print('Creating new version...')
     r = api('POST', '/appStoreVersions', json={
         'data': {
             'type': 'appStoreVersions',
-            'attributes': {'platform': 'IOS', 'versionString': '1.0'},
+            'attributes': {'platform': 'IOS', 'versionString': '1.2'},
             'relationships': {'app': {'data': {'type': 'apps', 'id': APP_ID}}}
         }
     })
