@@ -82,6 +82,19 @@ if not version_id or version_state in ('READY_FOR_DISTRIBUTION', 'READY_FOR_SALE
 
 print(f'Version ID: {version_id} state={version_state}')
 
+# Set "What's New" on all localizations
+r = api('GET', f'/appStoreVersions/{version_id}/appStoreVersionLocalizations')
+if r.status_code == 200:
+    for loc in r.json().get('data', []):
+        loc_id = loc['id']
+        locale = loc['attributes']['locale']
+        whats_new = 'アプリの安定性を改善しました。' if locale.startswith('ja') else 'Improved app stability.'
+        lr = api('PATCH', f'/appStoreVersionLocalizations/{loc_id}', json={
+            'data': {'type': 'appStoreVersionLocalizations', 'id': loc_id,
+                     'attributes': {'whatsNew': whats_new}}
+        })
+        print(f'WhatsNew {locale}: {lr.status_code}')
+
 # Assign build
 r = api('PATCH', f'/appStoreVersions/{version_id}/relationships/build',
     json={'data': {'type': 'builds', 'id': build_id}})
