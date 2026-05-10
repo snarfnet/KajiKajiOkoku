@@ -36,6 +36,7 @@ targets:
           - UIInterfaceOrientationPortrait
         NSCameraUsageDescription: 食べ物の写真を撮るためにカメラを使用します
         NSPhotoLibraryUsageDescription: 食べ物の写真を選ぶためにフォトライブラリを使用します
+        NSUserTrackingUsageDescription: 広告の最適化のために使用します
         UIApplicationSceneManifest:
           UIApplicationSupportsMultipleScenes: false
         GADApplicationIdentifier: ca-app-pub-9404799280370656~7783891369
