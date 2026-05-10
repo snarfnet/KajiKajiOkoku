@@ -4,6 +4,7 @@ KEY_ID = 'WDXGY9WX55'
 ISSUER = '2be0734f-943a-4d61-9dc9-5d9045c46fec'
 APP_ID = '6763900242'
 BUILD_NUMBER = sys.argv[1]
+VERSION = sys.argv[2] if len(sys.argv) > 2 else '1.4'
 
 p8 = open('/tmp/asc_key.p8').read()
 
@@ -69,7 +70,7 @@ if not version_id or version_state in ('READY_FOR_DISTRIBUTION', 'READY_FOR_SALE
     r = api('POST', '/appStoreVersions', json={
         'data': {
             'type': 'appStoreVersions',
-            'attributes': {'platform': 'IOS', 'versionString': '1.2'},
+            'attributes': {'platform': 'IOS', 'versionString': VERSION},
             'relationships': {'app': {'data': {'type': 'apps', 'id': APP_ID}}}
         }
     })
